@@ -1,16 +1,18 @@
-from pydantic import BaseModel, Field, EmailStr, field_validator, ConfigDict
-from backend.models import ApplicationStatus
 from datetime import date
 from typing import Optional
 
+from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
+
+from backend.models import ApplicationStatus
+
 
 class ApplicationCreate(BaseModel):
-    company_name: str =Field(max_length=100)
-    job_title: str =Field(max_length=100)
+    company_name: str = Field(max_length=100)
+    job_title: str = Field(max_length=100)
     status: ApplicationStatus | None = None
     applied_date: date
-    job_url: str =Field(max_length=500)
-    notes: str =Field(max_length=2000)
+    job_url: str = Field(max_length=500)
+    notes: str = Field(max_length=2000)
 
 
 class ApplicationUpdate(BaseModel):
@@ -40,7 +42,7 @@ class UserCreate(BaseModel):
     username: str = Field(min_length=3, max_length=50)
     password: str
     phone_number: str = Field(max_length=20)
-    address: str= Field(max_length=255)
+    address: str = Field(max_length=255)
 
     @field_validator("password")
     @classmethod

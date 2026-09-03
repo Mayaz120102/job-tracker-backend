@@ -1,16 +1,18 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Text, Enum, Date
+import enum
+
+from sqlalchemy import Column, Date, Enum, ForeignKey, Integer, String, Text
+
 from backend.database import Base
 
-import enum
 
 class ApplicationStatus(str, enum.Enum):
     applied = "applied"
     interview = "interview"
     offer = "offer"
-    rejected  = "rejected"
+    rejected = "rejected"
+
 
 class Users(Base):
-
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -22,7 +24,6 @@ class Users(Base):
 
 
 class Applications(Base):
-
     __tablename__ = "applications"
 
     id = Column(Integer, primary_key=True)
@@ -32,4 +33,4 @@ class Applications(Base):
     applied_date = Column(Date)
     job_url = Column(String)
     notes = Column(Text)
-    owner_id  = Column(Integer, ForeignKey("users.id"))
+    owner_id = Column(Integer, ForeignKey("users.id"))

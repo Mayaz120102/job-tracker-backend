@@ -1,9 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-
-from backend.config import settings
-
 from backend.router import applications, auth
 
 app = FastAPI()
