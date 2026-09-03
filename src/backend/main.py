@@ -1,10 +1,10 @@
-from backend.config import settings
 from fastapi import FastAPI
-from backend import models
-from backend.database import engine
-from backend.router import applications, auth
 from fastapi.middleware.cors import CORSMiddleware
 
+from backend import models
+from backend.config import settings
+from backend.database import engine
+from backend.router import applications, auth
 
 app = FastAPI()
 app.add_middleware(

@@ -14,7 +14,7 @@ user_dependency = Annotated[dict, Depends(get_current_user)]
 
 # get all applications
 
-@router.get("/applications")
+@router.get("/applications",response_model=list[ApplicationResponse])
 def get_all_applications(user: user_dependency, db: db_dependency):
 
     if user is None:
@@ -24,7 +24,7 @@ def get_all_applications(user: user_dependency, db: db_dependency):
 
 
 # speicifc application
-@router.get("/applications/{application_id}")
+@router.get("/applications/{application_id}", response_model=ApplicationResponse)
 def get_specific_application(user: user_dependency, db: db_dependency, application_id: int):
 
     if user is None:
