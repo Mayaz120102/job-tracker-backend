@@ -5,6 +5,7 @@ class Settings(BaseSettings):
     database_url: str
     secret_key: str
     algorithm: str
+    cors_origins: str
 
     model_config = SettingsConfigDict(env_file=".env")
 
