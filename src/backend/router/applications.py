@@ -1,12 +1,13 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Query
 from fastapi.responses import JSONResponse
-
+from typing import Optional
 from backend.database import db_dependency
-from backend.models import Applications
+from backend.models import Applications, ApplicationStatus
 from backend.router.auth import get_current_user
 from backend.schemas import ApplicationCreate, ApplicationResponse, ApplicationUpdate
+from sqlalchemy import or_
 
 router = APIRouter()
 
@@ -17,12 +18,32 @@ user_dependency = Annotated[dict, Depends(get_current_user)]
 
 
 @router.get("/applications", response_model=list[ApplicationResponse])
-def get_all_applications(user: user_dependency, db: db_dependency):
+def get_all_applications(
+    user: user_dependency,
+    db: db_dependency,
+    status: Optional[ApplicationStatus] = Query(default=None),
+    search: Optional[str] = Query(default=None),
+    skip: int = Query(default=0, ge=0),
+    limit: int = Query(default=10, ge=1, le=100),
+):
 
     if user is None:
         raise HTTPException(status_code=401, detail="Unauthorized User")
 
-    return db.query(Applications).filter(Applications.owner_id == user.get("id")).all()
+    query = db.query(Applications).filter(Applications.owner_id == user.get("id"))
+
+    if status is not None:
+        query = query.filter(Applications.status == status)
+
+    if search is not None:
+        query = query.filter(
+            or_(
+                Applications.company_name.ilike(f"%{search}%"),
+                Applications.job_title.ilike(f"%{search}%"),
+            )
+        )
+
+    return query.offset(skip).limit(limit).all()
 
 
 # speicifc application
